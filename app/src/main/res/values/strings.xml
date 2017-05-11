@@ -1,3 +1,10 @@
 <resources>
     <string name="app_name">Not so cloudy</string>
+    <string name="action_yes">Yes</string>
+    <string name="action_no">No</string>
+    <string name="msg_no_permission">No permission to get location</string>
+    <string name="msg_need_permission">We need permission to access location</string>
+    <string name="msg_explain_permission">We need to permission to get your location</string>
+    <string name="error_something_happen">Something happened</string>
+    <string name="api_key">AIzaSyB-eqraNZjGKxmvXWXnRBInCVd5DYG6fkQ</string>
 </resources>
