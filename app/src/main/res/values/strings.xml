@@ -7,4 +7,5 @@
     <string name="msg_explain_permission">We need to permission to get your location</string>
     <string name="error_something_happen">Something happened</string>
     <string name="api_key">AIzaSyB-eqraNZjGKxmvXWXnRBInCVd5DYG6fkQ</string>
+    <string name="msg_no_services">No service found</string>
 </resources>

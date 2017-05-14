@@ -24,17 +24,20 @@ import com.google.android.gms.location.LocationSettingsRequest;
 import com.google.android.gms.location.LocationSettingsResult;
 import com.google.android.gms.location.LocationSettingsStatusCodes;
 import com.minhth.weatherforecast.R;
+import com.minhth.weatherforecast.service.GpsService;
 
 public class MainActivity extends AppCompatActivity implements GoogleApiClient.ConnectionCallbacks,
     GoogleApiClient.OnConnectionFailedListener {
     private static final int REQUEST_CHECK_SETTINGS = 1;
     private static final int REQUEST_FINE_LOCATION = 101;
     private GoogleApiClient mGoogleApiClient;
+    private GpsService mGpsService;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+        mGpsService = new GpsService(this);
         buildGoogleApiClient();
         requestGps();
     }
@@ -92,6 +95,14 @@ public class MainActivity extends AppCompatActivity implements GoogleApiClient.C
             .build();
     }
 
+    private void getLocation() {
+        if (mGpsService.isCanGetLocation()) {
+            // TODO: 5/14/2017
+        } else {
+            // TODO: 5/14/2017
+        }
+    }
+
     private void requestPermission() {
         if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) !=
             PackageManager.PERMISSION_GRANTED) {
@@ -118,10 +129,6 @@ public class MainActivity extends AppCompatActivity implements GoogleApiClient.C
         } else {
             getLocation();
         }
-    }
-
-    private void getLocation() {
-        // TODO: 5/11/2017
     }
 
     public void requestGps() {
