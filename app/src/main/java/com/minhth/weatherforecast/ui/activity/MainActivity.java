@@ -28,6 +28,8 @@ import com.minhth.weatherforecast.service.GpsService;
 
 public class MainActivity extends AppCompatActivity implements GoogleApiClient.ConnectionCallbacks,
     GoogleApiClient.OnConnectionFailedListener {
+    private static final String UNIT = "si";
+    private static final String EXCLUDE = "flags";
     private static final int REQUEST_CHECK_SETTINGS = 1;
     private static final int REQUEST_FINE_LOCATION = 101;
     private GoogleApiClient mGoogleApiClient;
