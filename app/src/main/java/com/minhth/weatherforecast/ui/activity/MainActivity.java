@@ -39,7 +39,6 @@ public class MainActivity extends AppCompatActivity implements GoogleApiClient.C
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-        mGpsService = new GpsService(this);
         buildGoogleApiClient();
         requestGps();
     }
@@ -106,6 +105,7 @@ public class MainActivity extends AppCompatActivity implements GoogleApiClient.C
     }
 
     private void requestPermission() {
+        mGpsService = new GpsService(this);
         if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) !=
             PackageManager.PERMISSION_GRANTED) {
             if (ActivityCompat.shouldShowRequestPermissionRationale(this, Manifest.permission
