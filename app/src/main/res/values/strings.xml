@@ -6,6 +6,15 @@
     <string name="msg_need_permission">We need permission to access location</string>
     <string name="msg_explain_permission">We need to permission to get your location</string>
     <string name="error_something_happen">Something happened</string>
+    <string name="error_no_service">No service found, can\'t display</string>
     <string name="api_key">AIzaSyB-eqraNZjGKxmvXWXnRBInCVd5DYG6fkQ</string>
     <string name="msg_no_services">No service found</string>
+    <string name="action_setting">Settings</string>
+    <string name="title_hourly_forecast">Hourly Forecast</string>
+    <string name="title_daily_forecast">Daily Forecast</string>
+    <string name="txt_today">Today</string>
+    <string name="txt_tomorrow">Tomorrow</string>
+    <string name="title_last_update">Last update:\u0020</string>
+    <string name="title_feel">Real feel:\u0020</string>
+    <string name="symbol_celsius">\u2103</string>
 </resources>
