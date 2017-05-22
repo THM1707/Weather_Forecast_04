@@ -9,7 +9,6 @@ import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.app.ActivityCompat;
-import android.support.v4.widget.NestedScrollView;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
@@ -39,6 +38,7 @@ import com.minhth.weatherforecast.service.WeatherService;
 import com.minhth.weatherforecast.ui.adapter.DailyAdapter;
 import com.minhth.weatherforecast.ui.adapter.HourlyAdapter;
 import com.minhth.weatherforecast.util.ConditionUtils;
+import com.minhth.weatherforecast.util.DataUtils;
 import com.minhth.weatherforecast.util.TimeUtils;
 import com.minhth.weatherforecast.util.WeatherServiceGenerator;
 
@@ -71,6 +71,8 @@ public class MainActivity extends AppCompatActivity implements GoogleApiClient.C
     private ImageView mImageMainCondition;
     private List<WeatherModel> mHourlyData = new ArrayList<>();
     private List<WeatherModel> mDailyData = new ArrayList<>();
+    private TextView mTextSunrise, mTextSunset, mTextVisibility, mTextPressure;
+    private TextView mTextPrecipitation, mTextHumidity, mTextWindSpeed, mTextWindBearing;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -142,6 +144,14 @@ public class MainActivity extends AppCompatActivity implements GoogleApiClient.C
                 return false;
             }
         });
+        mTextSunrise = (TextView) findViewById(R.id.text_sunrise);
+        mTextSunset = (TextView) findViewById(R.id.text_sunset);
+        mTextVisibility = (TextView) findViewById(R.id.text_visibility);
+        mTextPressure = (TextView) findViewById(R.id.text_pressure);
+        mTextPrecipitation = (TextView) findViewById(R.id.text_precipitation);
+        mTextHumidity = (TextView) findViewById(R.id.text_humidity);
+        mTextWindBearing = (TextView) findViewById(R.id.text_wind_bearing);
+        mTextWindSpeed = (TextView) findViewById(R.id.text_wind_speed);
         mTextPromptDaily = (TextView) findViewById(R.id.text_prompt_daily);
         mTextPromptHourly = (TextView) findViewById(R.id.text_prompt_hourly);
         mDailyAdapter = new DailyAdapter(mDailyData);
@@ -221,7 +231,50 @@ public class MainActivity extends AppCompatActivity implements GoogleApiClient.C
         }
         if (model.getDaily() != null) {
             showDailyData(model.getDaily());
+            showDetails(model.getDaily().getWeatherModels().get(FIRST_DAY));
         }
+    }
+
+    private void showDetails(WeatherModel data) {
+        mTextSunrise.setText(TimeUtils.unixToString(data.getSunriseTime()));
+        mTextSunset.setText(TimeUtils.unixToString(data.getSunsetTime()));
+        String visibility = DataUtils.formatValue(data.getVisibility(), getResources()
+            .getString(R.string.measure_km));
+        mTextVisibility.setText(visibility);
+        String humidity = DataUtils.formatPercentage(data.getHumidity()*100);
+        mTextHumidity.setText(humidity);
+        String pressure = DataUtils.formatValue(data.getPressure(),  getResources()
+            .getString(R.string.measure_ha));
+        mTextPressure.setText(pressure);
+        String probability = DataUtils.formatPercentage(data.getPrecipProbability());
+        mTextPrecipitation.setText(probability);
+        String windSpeed = DataUtils.formatSpeed(data.getWindSpeed(),  getResources()
+            .getString(R.string.speed_kmph));
+        mTextWindSpeed.setText(windSpeed);
+        String windBearing = getWindBearing(data.getWindBearing());
+        mTextWindBearing.setText(windBearing);
+    }
+
+    public String getWindBearing(int windBearing) {
+        String result = getResources().getString(R.string.bearing_immobile);
+        if (windBearing == DataUtils.NORTH) {
+            return getResources().getString(R.string.bearing_north);
+        } else if (windBearing > DataUtils.NORTH && windBearing < DataUtils.EAST) {
+            return getResources().getString(R.string.bearing_north_east);
+        } else if (windBearing == DataUtils.EAST) {
+            return getResources().getString(R.string.bearing_east);
+        } else if (windBearing > DataUtils.EAST && windBearing < DataUtils.SOUTH){
+            return getResources().getString(R.string.bearing_south_east);
+        } else if (windBearing == DataUtils.SOUTH){
+            return getResources().getString(R.string.bearing_south);
+        } else if (windBearing > DataUtils.SOUTH && windBearing < DataUtils.WEST){
+            return getResources().getString(R.string.bearing_south_west);
+        } else if(windBearing == DataUtils.WEST){
+            return getResources().getString(R.string.bearing_west);
+        } else if(windBearing > DataUtils.WEST && windBearing < DataUtils.MAX_DEGREE){
+            return getResources().getString(R.string.bearing_north_west);
+        }
+        return result;
     }
 
     private void showDailyData(ForecastResponseModel.WeatherBlock data) {

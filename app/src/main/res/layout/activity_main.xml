@@ -5,6 +5,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:background="@drawable/background"
     android:orientation="vertical"
     tools:context="com.minhth.weatherforecast.ui.activity.MainActivity">
 
@@ -12,7 +13,7 @@
         android:id="@+id/toolbar_main"
         android:layout_width="match_parent"
         android:layout_height="?attr/actionBarSize"
-        android:background="@color/toolbarBackground"
+        android:background="@color/transparentBackground"
         android:theme="@style/AppTheme"
         app:popupTheme="@style/ThemeOverlay.AppCompat.Light"
         app:titleTextAppearance="@style/Toolbar.TitleText"/>
@@ -24,8 +25,7 @@
         <android.support.v4.widget.SwipeRefreshLayout
             android:id="@+id/swipe_main"
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:background="@drawable/background">
+            android:layout_height="match_parent">
 
             <android.support.v4.widget.NestedScrollView
                 android:id="@+id/nested_data"
@@ -39,10 +39,10 @@
 
                     <LinearLayout
                         android:layout_width="match_parent"
-                        android:layout_height="@dimen/dp_200"
-                        android:layout_marginTop="@dimen/dp_40"
+                        android:layout_height="@dimen/dp_240"
                         android:baselineAligned="false"
-                        android:orientation="horizontal">
+                        android:orientation="horizontal"
+                        android:paddingTop="@dimen/dp_40">
 
                         <LinearLayout
                             android:layout_width="0dp"
@@ -119,16 +119,20 @@
                     <LinearLayout
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
+                        android:layout_marginBottom="@dimen/dp_10"
                         android:layout_marginTop="@dimen/dp_20"
+                        android:background="@color/transparentBackground"
                         android:orientation="vertical">
 
                         <TextView
                             android:id="@+id/text_prompt_hourly"
                             android:layout_width="match_parent"
-                            android:layout_height="@dimen/dp_20"
+                            android:layout_height="@dimen/dp_40"
                             android:layout_marginBottom="@dimen/dp_5"
-                            android:layout_marginLeft="@dimen/dp_10"
-                            android:textColor="@color/colorWhite"
+                            android:background="@color/transparentItem"
+                            android:gravity="center_vertical"
+                            android:paddingLeft="@dimen/dp_10"
+                            android:textColor="@android:color/white"
                             android:textSize="@dimen/sp_14"/>
 
                         <android.support.v7.widget.RecyclerView
@@ -139,11 +143,12 @@
                         <TextView
                             android:id="@+id/text_prompt_daily"
                             android:layout_width="match_parent"
-                            android:layout_height="@dimen/dp_20"
+                            android:layout_height="@dimen/dp_40"
                             android:layout_marginBottom="@dimen/dp_5"
-                            android:layout_marginLeft="@dimen/dp_10"
-                            android:layout_marginTop="@dimen/dp_10"
-                            android:textColor="@color/colorWhite"
+                            android:background="@color/transparentItem"
+                            android:gravity="center_vertical"
+                            android:paddingLeft="@dimen/dp_10"
+                            android:textColor="@android:color/white"
                             android:textSize="@dimen/sp_14"/>
 
                         <android.support.v7.widget.RecyclerView
@@ -151,6 +156,8 @@
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"/>
                     </LinearLayout>
+
+                    <include layout="@layout/content_details"/>
                 </LinearLayout>
 
             </android.support.v4.widget.NestedScrollView>
@@ -160,6 +167,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_margin="@dimen/dp_16"
+            android:theme="@style/FabTheme"
             app:fabSize="normal"
             app:layout_anchor="@id/nested_data"
             app:layout_anchorGravity="bottom|right"/>

@@ -1,0 +1,298 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:layout_marginBottom="@dimen/dp_20"
+    android:layout_marginTop="@dimen/dp_10"
+    android:background="@color/transparentBackground"
+    android:orientation="vertical">
+
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/dp_40"
+        android:background="@color/transparentItem"
+        android:gravity="center_vertical"
+        android:paddingLeft="@dimen/dp_10"
+        android:text="@string/title_sun_moon"
+        android:textColor="@android:color/white"
+        android:textSize="@dimen/sp_14"/>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/dp_100"
+        android:orientation="horizontal">
+
+        <ImageView
+            android:layout_width="@dimen/dp_100"
+            android:layout_height="match_parent"
+            android:paddingLeft="@dimen/dp_5"
+            android:src="@drawable/ic_day_night"/>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:divider="@drawable/divider"
+            android:orientation="vertical"
+            android:showDividers="middle">
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="0dp"
+                android:layout_weight="1"
+                android:orientation="horizontal">
+
+                <TextView
+                    android:layout_width="@dimen/dp_160"
+                    android:layout_height="match_parent"
+                    android:gravity="center"
+                    android:text="@string/title_sunrise"
+                    android:textColor="@android:color/white"
+                    android:textSize="@dimen/sp_14"/>
+
+                <TextView
+                    android:id="@+id/text_sunrise"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:gravity="center"
+                    android:textColor="@android:color/white"
+                    android:textSize="@dimen/sp_14"/>
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="0dp"
+                android:layout_weight="1">
+
+                <TextView
+                    android:layout_width="@dimen/dp_160"
+                    android:layout_height="match_parent"
+                    android:gravity="center"
+                    android:text="@string/title_sunset"
+                    android:textColor="@android:color/white"
+                    android:textSize="@dimen/sp_14"/>
+
+                <TextView
+                    android:id="@+id/text_sunset"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:gravity="center"
+                    android:textColor="@android:color/white"
+                    android:textSize="@dimen/sp_14"/>
+            </LinearLayout>
+        </LinearLayout>
+    </LinearLayout>
+
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/dp_40"
+        android:background="@color/transparentItem"
+        android:gravity="center_vertical"
+        android:paddingLeft="@dimen/dp_10"
+        android:text="@string/title_details"
+        android:textColor="@android:color/white"
+        android:textSize="@dimen/sp_14"/>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+        <LinearLayout
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="2"
+            android:divider="@drawable/divider"
+            android:orientation="vertical"
+            android:showDividers="middle">
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="@dimen/dp_50"
+                android:orientation="horizontal">
+
+                <TextView
+                    android:layout_width="0dp"
+                    android:layout_height="match_parent"
+                    android:layout_weight="1"
+                    android:gravity="center_vertical"
+                    android:paddingLeft="@dimen/dp_10"
+                    android:text="@string/title_visibility"
+                    android:textColor="@android:color/white"
+                    android:textSize="@dimen/sp_14"/>
+
+                <TextView
+                    android:id="@+id/text_visibility"
+                    android:layout_width="0dp"
+                    android:layout_height="match_parent"
+                    android:layout_weight="1"
+                    android:gravity="center_vertical|right"
+                    android:paddingRight="@dimen/dp_10"
+                    android:textColor="@android:color/white"
+                    android:textSize="@dimen/sp_14"/>
+
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="@dimen/dp_50"
+                android:orientation="horizontal">
+
+                <TextView
+                    android:layout_width="0dp"
+                    android:layout_height="match_parent"
+                    android:layout_weight="1"
+                    android:gravity="center_vertical"
+                    android:paddingLeft="@dimen/dp_10"
+                    android:text="@string/title_pressure"
+                    android:textColor="@android:color/white"
+                    android:textSize="@dimen/sp_14"/>
+
+                <TextView
+                    android:id="@+id/text_pressure"
+                    android:layout_width="0dp"
+                    android:layout_height="match_parent"
+                    android:layout_weight="1"
+                    android:gravity="center_vertical|right"
+                    android:paddingRight="@dimen/dp_10"
+                    android:textColor="@android:color/white"
+                    android:textSize="@dimen/sp_14"/>
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="@dimen/dp_50"
+                android:orientation="horizontal">
+
+                <TextView
+                    android:layout_width="0dp"
+                    android:layout_height="match_parent"
+                    android:layout_weight="1"
+                    android:gravity="center_vertical"
+                    android:paddingLeft="@dimen/dp_10"
+                    android:text="@string/title_precipitation"
+                    android:textColor="@android:color/white"
+                    android:textSize="@dimen/sp_14"/>
+
+                <TextView
+                    android:id="@+id/text_precipitation"
+                    android:layout_width="0dp"
+                    android:layout_height="match_parent"
+                    android:layout_weight="1"
+                    android:gravity="center_vertical|right"
+                    android:paddingRight="@dimen/dp_10"
+                    android:textColor="@android:color/white"
+                    android:textSize="@dimen/sp_14"/>
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="@dimen/dp_50"
+                android:orientation="horizontal">
+
+                <TextView
+                    android:layout_width="0dp"
+                    android:layout_height="match_parent"
+                    android:layout_weight="1"
+                    android:gravity="center_vertical"
+                    android:paddingLeft="@dimen/dp_10"
+                    android:text="@string/title_humidity"
+                    android:textColor="@android:color/white"
+                    android:textSize="@dimen/sp_14"/>
+
+                <TextView
+                    android:id="@+id/text_humidity"
+                    android:layout_width="0dp"
+                    android:layout_height="match_parent"
+                    android:layout_weight="1"
+                    android:gravity="center_vertical|right"
+                    android:paddingRight="@dimen/dp_10"
+                    android:textColor="@android:color/white"
+                    android:textSize="@dimen/sp_14"/>
+            </LinearLayout>
+
+        </LinearLayout>
+
+        <ImageView
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:src="@drawable/ic_thermometer"/>
+
+    </LinearLayout>
+
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/dp_40"
+        android:background="@color/transparentItem"
+        android:gravity="center_vertical"
+        android:paddingLeft="@dimen/dp_10"
+        android:text="@string/title_wind"
+        android:textColor="@android:color/white"
+        android:textSize="@dimen/sp_14"/>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/dp_100"
+        android:orientation="horizontal">
+
+        <ImageView
+            android:layout_width="@dimen/dp_100"
+            android:layout_height="match_parent"
+            android:paddingLeft="@dimen/dp_5"
+            android:src="@drawable/ic_wind_data"/>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:divider="@drawable/divider"
+            android:orientation="vertical"
+            android:showDividers="middle">
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="0dp"
+                android:layout_weight="1"
+                android:orientation="horizontal">
+
+                <TextView
+                    android:layout_width="@dimen/dp_160"
+                    android:layout_height="match_parent"
+                    android:gravity="center"
+                    android:text="@string/title_wind_speed"
+                    android:textColor="@android:color/white"
+                    android:textSize="@dimen/sp_14"/>
+
+                <TextView
+                    android:id="@+id/text_wind_speed"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:gravity="center"
+                    android:textColor="@android:color/white"
+                    android:textSize="@dimen/sp_14"/>
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="0dp"
+                android:layout_weight="1">
+
+                <TextView
+                    android:layout_width="@dimen/dp_160"
+                    android:layout_height="match_parent"
+                    android:gravity="center"
+                    android:text="@string/title_wind_bearing"
+                    android:textColor="@android:color/white"
+                    android:textSize="@dimen/sp_14"/>
+
+                <TextView
+                    android:id="@+id/text_wind_bearing"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:gravity="center"
+                    android:textColor="@android:color/white"
+                    android:textSize="@dimen/sp_14"/>
+            </LinearLayout>
+        </LinearLayout>
+    </LinearLayout>
+
+</LinearLayout>
