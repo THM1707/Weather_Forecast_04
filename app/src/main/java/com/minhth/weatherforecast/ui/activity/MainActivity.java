@@ -1,13 +1,17 @@
 package com.minhth.weatherforecast.ui.activity;
 
 import android.Manifest;
+import android.app.DatePickerDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.IntentSender;
 import android.content.pm.PackageManager;
+import android.location.Address;
+import android.location.Geocoder;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
+import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.app.AlertDialog;
@@ -16,11 +20,16 @@ import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
 import android.view.Menu;
+import android.view.MenuItem;
+import android.view.View;
+import android.widget.DatePicker;
 import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import com.google.android.gms.common.ConnectionResult;
+import com.google.android.gms.common.GooglePlayServicesNotAvailableException;
+import com.google.android.gms.common.GooglePlayServicesRepairableException;
 import com.google.android.gms.common.api.GoogleApiClient;
 import com.google.android.gms.common.api.PendingResult;
 import com.google.android.gms.common.api.ResultCallback;
@@ -30,6 +39,8 @@ import com.google.android.gms.location.LocationServices;
 import com.google.android.gms.location.LocationSettingsRequest;
 import com.google.android.gms.location.LocationSettingsResult;
 import com.google.android.gms.location.LocationSettingsStatusCodes;
+import com.google.android.gms.location.places.Place;
+import com.google.android.gms.location.places.ui.PlacePicker;
 import com.minhth.weatherforecast.R;
 import com.minhth.weatherforecast.data.model.ForecastResponseModel;
 import com.minhth.weatherforecast.data.model.WeatherModel;
@@ -42,19 +53,25 @@ import com.minhth.weatherforecast.util.DataUtils;
 import com.minhth.weatherforecast.util.TimeUtils;
 import com.minhth.weatherforecast.util.WeatherServiceGenerator;
 
+import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.List;
+import java.util.Locale;
 
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
 
 public class MainActivity extends AppCompatActivity implements GoogleApiClient.ConnectionCallbacks,
-    GoogleApiClient.OnConnectionFailedListener {
+    GoogleApiClient.OnConnectionFailedListener, View.OnClickListener,
+    Callback<ForecastResponseModel> {
     private static final String UNIT = "si";
     private static final String EXCLUDE = "flags";
     private static final int REQUEST_CHECK_SETTINGS = 1;
+    private static final int REQUEST_ADDRESSES_NUMBER = 1;
     private static final int REQUEST_FINE_LOCATION = 101;
+    private static final int REQUEST_PLACE_PICKER = 102;
     private static final int FIRST_DAY = 0;
     private static final int LAST_DAY = 7;
     private static final int LAST_HOUR = 23;
@@ -73,6 +90,8 @@ public class MainActivity extends AppCompatActivity implements GoogleApiClient.C
     private List<WeatherModel> mDailyData = new ArrayList<>();
     private TextView mTextSunrise, mTextSunset, mTextVisibility, mTextPressure;
     private TextView mTextPrecipitation, mTextHumidity, mTextWindSpeed, mTextWindBearing;
+    private FloatingActionButton mFloatingDatePicker;
+    private long mUnixTime = 0;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -103,9 +122,16 @@ public class MainActivity extends AppCompatActivity implements GoogleApiClient.C
 
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        if (resultCode != RESULT_OK) {
+            return;
+        }
         switch (requestCode) {
             case REQUEST_CHECK_SETTINGS:
                 requestPermission();
+                break;
+            case REQUEST_PLACE_PICKER:
+                Place place = PlacePicker.getPlace(this, data);
+                showPickedLocation(place.getLatLng().latitude, place.getLatLng().longitude);
                 break;
             default:
                 break;
@@ -125,6 +151,74 @@ public class MainActivity extends AppCompatActivity implements GoogleApiClient.C
                         .show();
                 }
                 break;
+            default:
+                break;
+        }
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        switch (item.getItemId()) {
+            case R.id.item_setting:
+                setting();
+                break;
+            case R.id.item_place_picker:
+                pickPlace();
+                break;
+            default:
+                break;
+        }
+        return super.onOptionsItemSelected(item);
+    }
+
+    private void setting() {
+    }
+
+    @Override
+    public void onClick(View v) {
+        switch (v.getId()) {
+            case R.id.floating_date_picker:
+                Calendar calendar = Calendar.getInstance();
+                int day, year, month;
+                day = calendar.get(Calendar.DAY_OF_MONTH);
+                year = calendar.get(Calendar.YEAR);
+                month = calendar.get(Calendar.MONTH);
+                DatePickerDialog dateDialog = new DatePickerDialog(this,
+                    new DatePickerDialog.OnDateSetListener() {
+                        @Override
+                        public void onDateSet(DatePicker view, int year, int month,
+                                              int dayOfMonth) {
+                            Calendar result = Calendar.getInstance();
+                            result.set(year, month, dayOfMonth);
+                            mUnixTime = result.getTimeInMillis() / 1000;
+                            showTimeMachine(mUnixTime);
+                        }
+                    }, year, month, day);
+                dateDialog.show();
+                break;
+            default:
+                break;
+        }
+    }
+
+    @Override
+    public void onResponse(Call<ForecastResponseModel> call,
+                           Response<ForecastResponseModel> response) {
+        if (response != null) {
+            ForecastResponseModel model = response.body();
+            showData(model);
+        }
+        if (mSwipeRefreshLayout.isRefreshing()) {
+            mSwipeRefreshLayout.setRefreshing(false);
+        }
+    }
+
+    @Override
+    public void onFailure(Call<ForecastResponseModel> call, Throwable t) {
+        Toast.makeText(MainActivity.this, R.string.error_something_happen,
+            Toast.LENGTH_SHORT).show();
+        if (mSwipeRefreshLayout.isRefreshing()) {
+            mSwipeRefreshLayout.setRefreshing(false);
         }
     }
 
@@ -176,6 +270,8 @@ public class MainActivity extends AppCompatActivity implements GoogleApiClient.C
         mImageMainCondition = (ImageView) findViewById(R.id.image_condition);
         mToolbar = (Toolbar) findViewById(R.id.toolbar_main);
         setSupportActionBar(mToolbar);
+        mFloatingDatePicker = (FloatingActionButton) findViewById(R.id.floating_date_picker);
+        mFloatingDatePicker.setOnClickListener(this);
     }
 
     private synchronized void buildGoogleApiClient() {
@@ -186,36 +282,55 @@ public class MainActivity extends AppCompatActivity implements GoogleApiClient.C
             .build();
     }
 
-    private void getLocation() {
+    public void getLocation() {
+        mUnixTime = 0;
         if (mGpsService.isCanGetLocation()) {
-            WeatherService service = WeatherServiceGenerator.createService(WeatherService.class);
-            service.forecastResponse(WeatherServiceGenerator.API_KEY, mGpsService.getLatitude(),
-                mGpsService.getLongitude(), UNIT, EXCLUDE).enqueue(
-                new Callback<ForecastResponseModel>() {
-                    @Override
-                    public void onResponse(Call<ForecastResponseModel> call,
-                                           Response<ForecastResponseModel> response) {
-                        if (response != null) {
-                            ForecastResponseModel model = response.body();
-                            showData(model);
-                        }
-                        if (mSwipeRefreshLayout.isRefreshing()) {
-                            mSwipeRefreshLayout.setRefreshing(false);
-                        }
-                    }
-
-                    @Override
-                    public void onFailure(Call<ForecastResponseModel> call, Throwable t) {
-                        Toast.makeText(MainActivity.this, R.string.error_something_happen,
-                            Toast.LENGTH_SHORT).show();
-                        if (mSwipeRefreshLayout.isRefreshing()) {
-                            mSwipeRefreshLayout.setRefreshing(false);
-                        }
-                    }
-                });
+            forecastResponse(mGpsService.getLatitude(), mGpsService.getLongitude());
+            showPlaceName(mGpsService.getLatitude(), mGpsService.getLongitude());
         } else {
             Toast.makeText(MainActivity.this, R.string.error_no_service, Toast.LENGTH_SHORT)
                 .show();
+        }
+    }
+
+    public void pickPlace() {
+        PlacePicker.IntentBuilder builder = new PlacePicker.IntentBuilder();
+        try {
+            Intent intent = builder.build(this);
+            startActivityForResult(intent, REQUEST_PLACE_PICKER);
+        } catch (GooglePlayServicesRepairableException | GooglePlayServicesNotAvailableException e) {
+            e.printStackTrace();
+        }
+    }
+
+    public void showPickedLocation(double latitude, double longitude) {
+        mUnixTime = 0;
+        forecastResponse(latitude, longitude);
+        showPlaceName(latitude, longitude);
+    }
+
+    public void showTimeMachine(long unixTime) {
+        mUnixTime = unixTime;
+        if (mGpsService.isCanGetLocation()) {
+            forecastResponse(mGpsService.getLatitude(), mGpsService.getLongitude());
+            showPlaceName(mGpsService.getLatitude(), mGpsService.getLongitude());
+        } else {
+            Toast.makeText(MainActivity.this, R.string.error_no_service, Toast.LENGTH_SHORT)
+                .show();
+        }
+    }
+
+    public void forecastResponse(double latitude, double longitude) {
+        WeatherService service = WeatherServiceGenerator.createService(WeatherService.class);
+        if (mUnixTime == 0) {
+            service
+                .forecastResponse(WeatherServiceGenerator.API_KEY, latitude, longitude, UNIT,
+                    EXCLUDE)
+                .enqueue(this);
+        } else {
+            service
+                .timeMachineResponse(WeatherServiceGenerator.API_KEY, latitude, longitude,
+                    mUnixTime, UNIT, EXCLUDE).enqueue(this);
         }
     }
 
@@ -227,7 +342,6 @@ public class MainActivity extends AppCompatActivity implements GoogleApiClient.C
         }
         if (model.getHourly() != null) {
             showHourlyData(model.getHourly());
-
         }
         if (model.getDaily() != null) {
             showDailyData(model.getDaily());
@@ -235,20 +349,41 @@ public class MainActivity extends AppCompatActivity implements GoogleApiClient.C
         }
     }
 
+    public void showPlaceName(double latitude, double longitude) {
+        Geocoder geocoder = new Geocoder(this, Locale.getDefault());
+        StringBuilder builder = new StringBuilder();
+        try {
+            List<Address> addresses =
+                geocoder.getFromLocation(latitude, longitude, REQUEST_ADDRESSES_NUMBER);
+            int maxLines = addresses.get(0).getMaxAddressLineIndex();
+            for (int i = 0; i < maxLines; i++) {
+                String addressStr = addresses.get(0).getAddressLine(i);
+                builder.append(addressStr);
+                builder.append(" ");
+            }
+            String finalAddress = builder.toString();
+            if (getSupportActionBar() != null) {
+                getSupportActionBar().setTitle(finalAddress);
+            }
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
     private void showDetails(WeatherModel data) {
-        mTextSunrise.setText(TimeUtils.unixToString(data.getSunriseTime()));
-        mTextSunset.setText(TimeUtils.unixToString(data.getSunsetTime()));
+        mTextSunrise.setText(TimeUtils.unixToHourString(data.getSunriseTime()));
+        mTextSunset.setText(TimeUtils.unixToHourString(data.getSunsetTime()));
         String visibility = DataUtils.formatValue(data.getVisibility(), getResources()
             .getString(R.string.measure_km));
         mTextVisibility.setText(visibility);
-        String humidity = DataUtils.formatPercentage(data.getHumidity()*100);
+        String humidity = DataUtils.formatPercentage(data.getHumidity() * 100);
         mTextHumidity.setText(humidity);
-        String pressure = DataUtils.formatValue(data.getPressure(),  getResources()
+        String pressure = DataUtils.formatValue(data.getPressure(), getResources()
             .getString(R.string.measure_ha));
         mTextPressure.setText(pressure);
         String probability = DataUtils.formatPercentage(data.getPrecipProbability());
         mTextPrecipitation.setText(probability);
-        String windSpeed = DataUtils.formatSpeed(data.getWindSpeed(),  getResources()
+        String windSpeed = DataUtils.formatSpeed(data.getWindSpeed(), getResources()
             .getString(R.string.speed_kmph));
         mTextWindSpeed.setText(windSpeed);
         String windBearing = getWindBearing(data.getWindBearing());
@@ -263,15 +398,15 @@ public class MainActivity extends AppCompatActivity implements GoogleApiClient.C
             return getResources().getString(R.string.bearing_north_east);
         } else if (windBearing == DataUtils.EAST) {
             return getResources().getString(R.string.bearing_east);
-        } else if (windBearing > DataUtils.EAST && windBearing < DataUtils.SOUTH){
+        } else if (windBearing > DataUtils.EAST && windBearing < DataUtils.SOUTH) {
             return getResources().getString(R.string.bearing_south_east);
-        } else if (windBearing == DataUtils.SOUTH){
+        } else if (windBearing == DataUtils.SOUTH) {
             return getResources().getString(R.string.bearing_south);
-        } else if (windBearing > DataUtils.SOUTH && windBearing < DataUtils.WEST){
+        } else if (windBearing > DataUtils.SOUTH && windBearing < DataUtils.WEST) {
             return getResources().getString(R.string.bearing_south_west);
-        } else if(windBearing == DataUtils.WEST){
+        } else if (windBearing == DataUtils.WEST) {
             return getResources().getString(R.string.bearing_west);
-        } else if(windBearing > DataUtils.WEST && windBearing < DataUtils.MAX_DEGREE){
+        } else if (windBearing > DataUtils.WEST && windBearing < DataUtils.MAX_DEGREE) {
             return getResources().getString(R.string.bearing_north_west);
         }
         return result;
@@ -279,7 +414,11 @@ public class MainActivity extends AppCompatActivity implements GoogleApiClient.C
 
     private void showDailyData(ForecastResponseModel.WeatherBlock data) {
         mDailyData.clear();
-        mDailyData.addAll(data.getWeatherModels().subList(FIRST_DAY, LAST_DAY));
+        if (mUnixTime == 0) {
+            mDailyData.addAll(data.getWeatherModels().subList(FIRST_DAY, LAST_DAY));
+        } else {
+            mDailyData.addAll(data.getWeatherModels());
+        }
         mDailyAdapter.notifyDataSetChanged();
     }
 
@@ -293,8 +432,14 @@ public class MainActivity extends AppCompatActivity implements GoogleApiClient.C
     private void showCurrentlyData(WeatherModel data) {
         String celsius = getResources().getString(R.string.symbol_celsius);
         String temperature = String.valueOf((int) data.getTemperature());
-        String updateTime =
-            getResources().getString(R.string.title_last_update) + TimeUtils.nowToString();
+        String updateTime;
+        if (mUnixTime == 0) {
+            updateTime =
+                getResources().getString(R.string.title_last_update) + TimeUtils.nowToString();
+        } else {
+            updateTime = getResources().getString(R.string.title_date) + TimeUtils
+                .unixToDateString(mUnixTime);
+        }
         String realFeel =
             getResources().getString(R.string.title_feel) + (int) data.getApparentTemperature() +
                 celsius;

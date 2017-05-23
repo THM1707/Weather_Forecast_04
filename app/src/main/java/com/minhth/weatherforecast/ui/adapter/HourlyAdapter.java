@@ -54,7 +54,7 @@ public class HourlyAdapter extends RecyclerView.Adapter<HourlyAdapter.ViewHolder
             if(item != null){
                 String celsius = itemView.getContext().getResources().getString(R.string
                     .symbol_celsius);
-                mTextTime.setText(TimeUtils.unixToString(item.getTime()));
+                mTextTime.setText(TimeUtils.unixToHourString(item.getTime()));
                 String temperature = String.valueOf((int)item.getTemperature()) + celsius;
                 mTextTemperature.setText(temperature);
                 mImage.setImageResource(ConditionUtils.getConditionResource(item.getIcon()));
