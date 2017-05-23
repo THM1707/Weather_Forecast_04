@@ -40,4 +40,5 @@
     <string name="bearing_south_west">South West</string>
     <string name="bearing_west">West</string>
     <string name="bearing_north_west">North West</string>
+    <string name="title_date">Date:\u0020</string>
 </resources>

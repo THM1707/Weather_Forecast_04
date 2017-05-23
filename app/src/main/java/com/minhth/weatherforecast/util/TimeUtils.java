@@ -16,8 +16,13 @@ public class TimeUtils {
         DateFormat df = new SimpleDateFormat("dd/MM\tHH:mm");
         return df.format(today);
     }
-    public static String unixToString(long unix){
+    public static String unixToHourString(long unix){
         DateFormat df = new SimpleDateFormat("HH:mm");
+        Date date = new Date(unix*1000);
+        return df.format(date);
+    }
+    public static String unixToDateString(long unix){
+        DateFormat df = new SimpleDateFormat("dd/MM/yyyy");
         Date date = new Date(unix*1000);
         return df.format(date);
     }

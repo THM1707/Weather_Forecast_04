@@ -54,6 +54,7 @@
                                 android:id="@+id/text_time"
                                 android:layout_width="match_parent"
                                 android:layout_height="@dimen/dp_30"
+                                android:layout_marginLeft="@dimen/dp_10"
                                 android:background="@android:color/transparent"
                                 android:textColor="@color/colorWhite"
                                 android:textSize="@dimen/sp_14"/>
@@ -152,6 +153,7 @@
                             android:textSize="@dimen/sp_14"/>
 
                         <android.support.v7.widget.RecyclerView
+                            android:paddingBottom="@dimen/dp_10"
                             android:id="@+id/recycler_daily"
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"/>
@@ -164,12 +166,15 @@
         </android.support.v4.widget.SwipeRefreshLayout>
 
         <android.support.design.widget.FloatingActionButton
+            android:id="@+id/floating_date_picker"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_margin="@dimen/dp_16"
+            android:src="@drawable/ic_calendar"
             android:theme="@style/FabTheme"
             app:fabSize="normal"
             app:layout_anchor="@id/nested_data"
             app:layout_anchorGravity="bottom|right"/>
     </android.support.design.widget.CoordinatorLayout>
+
 </LinearLayout>
