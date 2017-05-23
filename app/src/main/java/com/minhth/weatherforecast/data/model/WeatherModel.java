@@ -39,6 +39,16 @@ public class WeatherModel {
     private double mTemperatureMin;
     @SerializedName("temperatureMax")
     private double mTemperatureMax;
+    @SerializedName("visibility")
+    private double mVisibility;
+
+    public double getVisibility() {
+        return mVisibility;
+    }
+
+    public void setVisibility(double visibility) {
+        mVisibility = visibility;
+    }
 
     public String getIcon() {
         return mIcon;

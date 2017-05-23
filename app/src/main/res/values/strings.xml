@@ -17,4 +17,27 @@
     <string name="title_last_update">Last update:\u0020</string>
     <string name="title_feel">Real feel:\u0020</string>
     <string name="symbol_celsius">\u2103</string>
+    <string name="title_sun_moon">Sun and Moon</string>
+    <string name="title_sunrise">Sunrise Time</string>
+    <string name="title_sunset">Sunset Time</string>
+    <string name="title_details">Details</string>
+    <string name="title_visibility">Visibility</string>
+    <string name="title_pressure">Pressure</string>
+    <string name="title_precipitation">Precipitation</string>
+    <string name="title_humidity">Humidity</string>
+    <string name="title_wind_speed">Wind Speed</string>
+    <string name="title_wind_bearing">Wind Bearing</string>
+    <string name="measure_km">Km</string>
+    <string name="measure_ha">Ha</string>
+    <string name="speed_kmph">Km/h</string>
+    <string name="title_wind">Wind</string>
+    <string name="bearing_immobile">Immobile</string>
+    <string name="bearing_north">North</string>
+    <string name="bearing_north_east">North East</string>
+    <string name="bearing_east">East</string>
+    <string name="bearing_south_east">South East</string>
+    <string name="bearing_south">South</string>
+    <string name="bearing_south_west">South West</string>
+    <string name="bearing_west">West</string>
+    <string name="bearing_north_west">North West</string>
 </resources>
