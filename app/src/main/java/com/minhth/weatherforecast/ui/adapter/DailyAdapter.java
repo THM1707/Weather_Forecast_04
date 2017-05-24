@@ -11,6 +11,7 @@ import com.minhth.weatherforecast.R;
 import com.minhth.weatherforecast.data.model.WeatherModel;
 import com.minhth.weatherforecast.util.ConditionUtils;
 import com.minhth.weatherforecast.util.TimeUtils;
+import com.minhth.weatherforecast.util.UnitUtils;
 
 import java.util.List;
 
@@ -18,12 +19,16 @@ import java.util.List;
  * Created by THM on 5/21/2017.
  */
 public class DailyAdapter extends RecyclerView.Adapter<DailyAdapter.ViewHolder> {
+    public static final int UNIT_CELSIUS = 0;
+    public static final int UNIT_FAHRENHEIT = 1;
     private static final int TODAY = 0;
     private static final int TOMORROW = 1;
     private List<WeatherModel> mDailyData;
+    private int mUnit;
 
-    public DailyAdapter(List<WeatherModel> dailyData) {
-        this.mDailyData = dailyData;
+    public DailyAdapter(List<WeatherModel> dailyData, int unit) {
+        mDailyData = dailyData;
+        mUnit = unit;
     }
 
     @Override
@@ -70,8 +75,22 @@ public class DailyAdapter extends RecyclerView.Adapter<DailyAdapter.ViewHolder> 
                 }
                 String celsius = itemView.getContext().getResources().getString(R.string
                     .symbol_celsius);
-                String minTemperature = String.valueOf((int) item.getTemperatureMin()) + celsius;
-                String maxTemperature = String.valueOf((int) item.getTemperatureMax()) + celsius;
+                String fahrenheit = itemView.getContext().getResources().getString(R.string
+                    .symbol_fahrenheit);
+                String minTemperature = "";
+                String maxTemperature = "";
+                switch (mUnit) {
+                    case UNIT_CELSIUS:
+                        minTemperature = String.valueOf((int) item.getTemperatureMin()) + celsius;
+                        maxTemperature = String.valueOf((int) item.getTemperatureMax()) + celsius;
+                        break;
+                    case UNIT_FAHRENHEIT:
+                        minTemperature = String.valueOf((int) UnitUtils.celsiusToFahrenheit(item
+                            .getTemperatureMin())) + fahrenheit;
+                        minTemperature = String.valueOf((int) UnitUtils.celsiusToFahrenheit(item
+                            .getTemperatureMax())) + fahrenheit;
+                        break;
+                }
                 mTextMin.setText(minTemperature);
                 mTextMax.setText(maxTemperature);
                 mImageCondition

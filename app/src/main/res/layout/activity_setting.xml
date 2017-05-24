@@ -1,0 +1,82 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical">
+
+    <android.support.v7.widget.Toolbar
+        android:id="@+id/toolbar_setting"
+        android:layout_width="match_parent"
+        android:layout_height="?attr/actionBarSize"
+        android:background="@color/transparentBackground"
+        android:theme="@style/BackButtonTheme"
+        app:popupTheme="@style/ThemeOverlay.AppCompat.Light"
+        app:titleTextAppearance="@style/Toolbar.TitleText"/>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_margin="@dimen/dp_5"
+        android:divider="@android:drawable/divider_horizontal_textfield"
+        android:orientation="vertical"
+        android:showDividers="middle|end">
+
+        <LinearLayout
+            android:id="@+id/linear_temp"
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/dp_60"
+            android:orientation="horizontal">
+
+            <TextView
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_weight="1"
+                android:paddingLeft="@dimen/dp_20"
+                android:paddingTop="@dimen/dp_10"
+                android:text="@string/title_temperature"
+                android:textSize="@dimen/sp_18"/>
+
+            <TextView
+                android:id="@+id/text_temp_choice"
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_weight="1"
+                android:gravity="right|bottom"
+                android:paddingBottom="@dimen/dp_10"
+                android:paddingRight="@dimen/dp_20"
+                android:text="@string/symbol_celsius"
+                android:textColor="@android:color/holo_blue_bright"
+                android:textSize="@dimen/sp_18"/>
+        </LinearLayout>
+
+        <LinearLayout
+            android:id="@+id/linear_measure"
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/dp_60"
+            android:orientation="horizontal">
+
+            <TextView
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_weight="1"
+                android:paddingLeft="@dimen/dp_20"
+                android:paddingTop="@dimen/dp_10"
+                android:text="@string/title_measure"
+                android:textSize="@dimen/sp_18"/>
+
+            <TextView
+                android:id="@+id/text_measure_choice"
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_weight="1"
+                android:gravity="right|bottom"
+                android:paddingBottom="@dimen/dp_10"
+                android:paddingRight="@dimen/dp_20"
+                android:text="@string/measure_kph_km"
+                android:textColor="@android:color/holo_blue_bright"
+                android:textSize="@dimen/sp_18"/>
+        </LinearLayout>
+    </LinearLayout>
+</LinearLayout>
