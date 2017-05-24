@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu
+    xmlns:android="http://schemas.android.com/apk/res/android">
+    <item
+        android:id="@+id/menu_kph"
+        android:title="@string/measure_kph_km"/>
+    <item
+        android:id="@+id/menu_mph"
+        android:title="@string/measure_mph_mile"/>
+</menu>

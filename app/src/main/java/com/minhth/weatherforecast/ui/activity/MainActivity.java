@@ -2,9 +2,11 @@ package com.minhth.weatherforecast.ui.activity;
 
 import android.Manifest;
 import android.app.DatePickerDialog;
+import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.IntentSender;
+import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
 import android.location.Address;
 import android.location.Geocoder;
@@ -51,6 +53,7 @@ import com.minhth.weatherforecast.ui.adapter.HourlyAdapter;
 import com.minhth.weatherforecast.util.ConditionUtils;
 import com.minhth.weatherforecast.util.DataUtils;
 import com.minhth.weatherforecast.util.TimeUtils;
+import com.minhth.weatherforecast.util.UnitUtils;
 import com.minhth.weatherforecast.util.WeatherServiceGenerator;
 
 import java.io.IOException;
@@ -68,14 +71,23 @@ public class MainActivity extends AppCompatActivity implements GoogleApiClient.C
     Callback<ForecastResponseModel> {
     private static final String UNIT = "si";
     private static final String EXCLUDE = "flags";
+    private static final String KEY_TEMPERATURE = "KEY_TEMPERATURE";
+    private static final String KEY_MEASURE = "KEY_MEASURE";
     private static final int REQUEST_CHECK_SETTINGS = 1;
     private static final int REQUEST_ADDRESSES_NUMBER = 1;
     private static final int REQUEST_FINE_LOCATION = 101;
     private static final int REQUEST_PLACE_PICKER = 102;
+    private static final int REQUEST_SETTING = 103;
     private static final int FIRST_DAY = 0;
     private static final int LAST_DAY = 7;
     private static final int LAST_HOUR = 23;
     private static final int FIRST_HOUR = 0;
+    private static final int MEASURE_KM = 0;
+    private static final int MEASURE_MILE = 1;
+    private static final int UNIT_CELSIUS = 0;
+    private static final int UNIT_FAHRENHEIT = 1;
+    private int mMeasureChoice, mTemperatureChoice;
+    private long mUnixTime = 0;
     private GoogleApiClient mGoogleApiClient;
     private GpsService mGpsService;
     private Toolbar mToolbar;
@@ -91,12 +103,15 @@ public class MainActivity extends AppCompatActivity implements GoogleApiClient.C
     private TextView mTextSunrise, mTextSunset, mTextVisibility, mTextPressure;
     private TextView mTextPrecipitation, mTextHumidity, mTextWindSpeed, mTextWindBearing;
     private FloatingActionButton mFloatingDatePicker;
-    private long mUnixTime = 0;
+    private ForecastResponseModel mWeatherData;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+        SharedPreferences sharedPreferences = getPreferences(Context.MODE_PRIVATE);
+        mTemperatureChoice = sharedPreferences.getInt(KEY_TEMPERATURE, UNIT_CELSIUS);
+        mMeasureChoice = sharedPreferences.getInt(KEY_MEASURE, MEASURE_KM);
         initViews();
         buildGoogleApiClient();
         requestGps();
@@ -132,6 +147,15 @@ public class MainActivity extends AppCompatActivity implements GoogleApiClient.C
             case REQUEST_PLACE_PICKER:
                 Place place = PlacePicker.getPlace(this, data);
                 showPickedLocation(place.getLatLng().latitude, place.getLatLng().longitude);
+                break;
+            case REQUEST_SETTING:
+                mMeasureChoice = data.getIntExtra(KEY_MEASURE, MEASURE_KM);
+                mTemperatureChoice = data.getIntExtra(KEY_TEMPERATURE, UNIT_CELSIUS);
+                SharedPreferences.Editor editor = getPreferences(MODE_PRIVATE).edit();
+                editor.putInt(KEY_MEASURE, mMeasureChoice);
+                editor.putInt(KEY_TEMPERATURE, mTemperatureChoice);
+                editor.apply();
+                showData(mWeatherData);
                 break;
             default:
                 break;
@@ -172,6 +196,8 @@ public class MainActivity extends AppCompatActivity implements GoogleApiClient.C
     }
 
     private void setting() {
+        Intent intent = new Intent(this, SettingActivity.class);
+        startActivityForResult(intent, REQUEST_SETTING);
     }
 
     @Override
@@ -206,6 +232,7 @@ public class MainActivity extends AppCompatActivity implements GoogleApiClient.C
                            Response<ForecastResponseModel> response) {
         if (response != null) {
             ForecastResponseModel model = response.body();
+            mWeatherData = model;
             showData(model);
         }
         if (mSwipeRefreshLayout.isRefreshing()) {
@@ -248,12 +275,8 @@ public class MainActivity extends AppCompatActivity implements GoogleApiClient.C
         mTextWindSpeed = (TextView) findViewById(R.id.text_wind_speed);
         mTextPromptDaily = (TextView) findViewById(R.id.text_prompt_daily);
         mTextPromptHourly = (TextView) findViewById(R.id.text_prompt_hourly);
-        mDailyAdapter = new DailyAdapter(mDailyData);
-        mRecyclerDaily.setAdapter(mDailyAdapter);
         mRecyclerHourly = (RecyclerView) findViewById(R.id.recycler_hourly);
         mRecyclerHourly.setLayoutManager(layoutManager);
-        mHourlyAdapter = new HourlyAdapter(mHourlyData);
-        mRecyclerHourly.setAdapter(mHourlyAdapter);
         mTextDegree = (TextView) findViewById(R.id.text_degree);
         mTextTime = (TextView) findViewById(R.id.text_time);
         mTextFeel = (TextView) findViewById(R.id.text_real_feel);
@@ -373,18 +396,30 @@ public class MainActivity extends AppCompatActivity implements GoogleApiClient.C
     private void showDetails(WeatherModel data) {
         mTextSunrise.setText(TimeUtils.unixToHourString(data.getSunriseTime()));
         mTextSunset.setText(TimeUtils.unixToHourString(data.getSunsetTime()));
-        String visibility = DataUtils.formatValue(data.getVisibility(), getResources()
-            .getString(R.string.measure_km));
+        String visibility = "";
+        String windSpeed = "";
+        switch (mMeasureChoice) {
+            case MEASURE_KM:
+                visibility = DataUtils.formatValue(data.getVisibility(), getResources()
+                    .getString(R.string.measure_km));
+                windSpeed = DataUtils.formatSpeed(data.getWindSpeed(), getResources()
+                    .getString(R.string.speed_kmph));
+                break;
+            case MEASURE_MILE:
+                visibility = DataUtils.formatValue(UnitUtils.kmToMile(data.getVisibility()),
+                    getResources().getString(R.string.measure_mile));
+                windSpeed = DataUtils.formatSpeed(UnitUtils.kmToMile(data.getWindSpeed()),
+                    getResources().getString(R.string.speed_mph));
+                break;
+        }
         mTextVisibility.setText(visibility);
         String humidity = DataUtils.formatPercentage(data.getHumidity() * 100);
         mTextHumidity.setText(humidity);
         String pressure = DataUtils.formatValue(data.getPressure(), getResources()
             .getString(R.string.measure_ha));
         mTextPressure.setText(pressure);
-        String probability = DataUtils.formatPercentage(data.getPrecipProbability());
+        String probability = DataUtils.formatPercentage(data.getPrecipProbability()*100);
         mTextPrecipitation.setText(probability);
-        String windSpeed = DataUtils.formatSpeed(data.getWindSpeed(), getResources()
-            .getString(R.string.speed_kmph));
         mTextWindSpeed.setText(windSpeed);
         String windBearing = getWindBearing(data.getWindBearing());
         mTextWindBearing.setText(windBearing);
@@ -419,19 +454,46 @@ public class MainActivity extends AppCompatActivity implements GoogleApiClient.C
         } else {
             mDailyData.addAll(data.getWeatherModels());
         }
-        mDailyAdapter.notifyDataSetChanged();
+        mDailyAdapter = new DailyAdapter(mDailyData, mTemperatureChoice);
+        mRecyclerDaily.setAdapter(mDailyAdapter);
     }
 
     private void showHourlyData(ForecastResponseModel.WeatherBlock data) {
         mHourlyData.clear();
         List<WeatherModel> hourly = data.getWeatherModels().subList(FIRST_HOUR, LAST_HOUR);
         mHourlyData.addAll(hourly);
-        mHourlyAdapter.notifyDataSetChanged();
+        switch (mTemperatureChoice){
+            case UNIT_CELSIUS:
+                mHourlyAdapter = new HourlyAdapter(mHourlyData, UNIT_CELSIUS);
+                break;
+            case UNIT_FAHRENHEIT:
+                mHourlyAdapter = new HourlyAdapter(mHourlyData, UNIT_FAHRENHEIT);
+                break;
+        }
+        mRecyclerHourly.setAdapter(mHourlyAdapter);
     }
 
     private void showCurrentlyData(WeatherModel data) {
-        String celsius = getResources().getString(R.string.symbol_celsius);
-        String temperature = String.valueOf((int) data.getTemperature());
+        String temperatureUnit = "";
+        String temperature = "";
+        String realFeel = "";
+        switch (mTemperatureChoice) {
+            case UNIT_CELSIUS:
+                temperatureUnit = getResources().getString(R.string.symbol_celsius);
+                temperature = String.valueOf((int) data.getTemperature());
+                realFeel = getResources().getString(R.string.title_feel) + (int) data
+                    .getApparentTemperature() + temperatureUnit;
+                break;
+            case UNIT_FAHRENHEIT:
+                temperatureUnit = getResources().getString(R.string.symbol_fahrenheit);
+                temperature = String.valueOf((int) UnitUtils.celsiusToFahrenheit(
+                    data.getTemperature()));
+                realFeel = getResources().getString(R.string.title_feel) + UnitUtils
+                    .celsiusToFahrenheit((int) data.getApparentTemperature()) + temperatureUnit;
+                break;
+        }
+//        String celsius = getResources().getString(R.string.symbol_celsius);
+//        String temperature = String.valueOf((int) data.getTemperature());
         String updateTime;
         if (mUnixTime == 0) {
             updateTime =
@@ -440,16 +502,13 @@ public class MainActivity extends AppCompatActivity implements GoogleApiClient.C
             updateTime = getResources().getString(R.string.title_date) + TimeUtils
                 .unixToDateString(mUnixTime);
         }
-        String realFeel =
-            getResources().getString(R.string.title_feel) + (int) data.getApparentTemperature() +
-                celsius;
         mTextTemperature.setText(temperature);
         mTextTime.setText(updateTime);
         mTextFeel.setText(realFeel);
         mTextCondition.setText(ConditionUtils.getCondition(data.getIcon()));
         mImageMainCondition
             .setImageResource(ConditionUtils.getConditionResource(data.getIcon()));
-        mTextDegree.setText(celsius);
+        mTextDegree.setText(temperatureUnit);
     }
 
     private void requestPermission() {

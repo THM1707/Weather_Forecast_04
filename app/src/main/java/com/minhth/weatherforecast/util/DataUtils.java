@@ -19,6 +19,6 @@ public class DataUtils {
     }
 
     public static String formatSpeed(double speed, String measure) {
-        return String.format("%.0f%s", speed, measure);
+        return String.format("%.1f%s", speed, measure);
     }
 }

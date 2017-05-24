@@ -11,6 +11,7 @@ import com.minhth.weatherforecast.R;
 import com.minhth.weatherforecast.data.model.WeatherModel;
 import com.minhth.weatherforecast.util.ConditionUtils;
 import com.minhth.weatherforecast.util.TimeUtils;
+import com.minhth.weatherforecast.util.UnitUtils;
 
 import java.util.List;
 
@@ -18,10 +19,14 @@ import java.util.List;
  * Created by THM on 5/21/2017.
  */
 public class HourlyAdapter extends RecyclerView.Adapter<HourlyAdapter.ViewHolder> {
+    public static final int UNIT_CELSIUS = 0;
+    public static final int UNIT_FAHRENHEIT = 1;
     private List<WeatherModel> mHourlyData;
+    private int mUnit;
 
-    public HourlyAdapter(List<WeatherModel> hourlyData) {
+    public HourlyAdapter(List<WeatherModel> hourlyData, int unit) {
         mHourlyData = hourlyData;
+        mUnit = unit;
     }
 
     @Override
@@ -44,18 +49,30 @@ public class HourlyAdapter extends RecyclerView.Adapter<HourlyAdapter.ViewHolder
     public class ViewHolder extends RecyclerView.ViewHolder {
         private TextView mTextTime, mTextTemperature;
         private ImageView mImage;
+
         public ViewHolder(View itemView) {
             super(itemView);
             mTextTemperature = (TextView) itemView.findViewById(R.id.text_hourly_temperature);
             mTextTime = (TextView) itemView.findViewById(R.id.text_hourly_time);
             mImage = (ImageView) itemView.findViewById(R.id.image_hourly_condition);
         }
-        public void bindData(WeatherModel item){
-            if(item != null){
-                String celsius = itemView.getContext().getResources().getString(R.string
-                    .symbol_celsius);
+
+        public void bindData(WeatherModel item) {
+            String temperature = "";
+            if (item != null) {
+                switch (mUnit) {
+                    case UNIT_CELSIUS:
+                        temperature = String.valueOf((int) item.getTemperature()) + itemView
+                            .getContext().getResources().getString(R.string.symbol_celsius);
+                        break;
+                    case UNIT_FAHRENHEIT:
+                        temperature = String.valueOf((int) UnitUtils.celsiusToFahrenheit(
+                            item.getTemperature())) +
+                            itemView.getContext().getResources()
+                                .getString(R.string.symbol_fahrenheit);
+                        break;
+                }
                 mTextTime.setText(TimeUtils.unixToHourString(item.getTime()));
-                String temperature = String.valueOf((int)item.getTemperature()) + celsius;
                 mTextTemperature.setText(temperature);
                 mImage.setImageResource(ConditionUtils.getConditionResource(item.getIcon()));
             }

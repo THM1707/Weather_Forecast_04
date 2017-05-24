@@ -41,4 +41,12 @@
     <string name="bearing_west">West</string>
     <string name="bearing_north_west">North West</string>
     <string name="title_date">Date:\u0020</string>
+    <string name="measure_kph_km">Km/h, Km</string>
+    <string name="measure_mph_mile">Mph, mile</string>
+    <string name="symbol_fahrenheit">\u2109</string>
+    <string name="title_temperature">Temperature</string>
+    <string name="title_measure">Measure</string>
+    <string name="title_settings">Settings</string>
+    <string name="measure_mile">Miles</string>
+    <string name="speed_mph">Mph</string>
 </resources>
