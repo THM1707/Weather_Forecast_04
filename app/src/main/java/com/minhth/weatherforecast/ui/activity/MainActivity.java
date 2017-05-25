@@ -10,6 +10,8 @@ import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
 import android.location.Address;
 import android.location.Geocoder;
+import android.net.ConnectivityManager;
+import android.net.NetworkInfo;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
@@ -26,6 +28,7 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.DatePicker;
 import android.widget.ImageView;
+import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -104,11 +107,16 @@ public class MainActivity extends AppCompatActivity implements GoogleApiClient.C
     private TextView mTextPrecipitation, mTextHumidity, mTextWindSpeed, mTextWindBearing;
     private FloatingActionButton mFloatingDatePicker;
     private ForecastResponseModel mWeatherData;
+    private ProgressBar mProgressHourly, mProgressDaily;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+        if(!isNetworkAvailable()){
+            Toast.makeText(this, R.string.msg_turn_on_internet, Toast.LENGTH_SHORT).show();
+            finish();
+        }
         SharedPreferences sharedPreferences = getPreferences(Context.MODE_PRIVATE);
         mTemperatureChoice = sharedPreferences.getInt(KEY_TEMPERATURE, UNIT_CELSIUS);
         mMeasureChoice = sharedPreferences.getInt(KEY_MEASURE, MEASURE_KM);
@@ -290,6 +298,8 @@ public class MainActivity extends AppCompatActivity implements GoogleApiClient.C
                 getLocation();
             }
         });
+        mProgressDaily = (ProgressBar) findViewById(R.id.progress_daily);
+        mProgressHourly = (ProgressBar) findViewById(R.id.progress_hourly);
         mImageMainCondition = (ImageView) findViewById(R.id.image_condition);
         mToolbar = (Toolbar) findViewById(R.id.toolbar_main);
         setSupportActionBar(mToolbar);
@@ -311,6 +321,11 @@ public class MainActivity extends AppCompatActivity implements GoogleApiClient.C
             forecastResponse(mGpsService.getLatitude(), mGpsService.getLongitude());
             showPlaceName(mGpsService.getLatitude(), mGpsService.getLongitude());
         } else {
+            mProgressHourly.setVisibility(View.GONE);
+            mProgressDaily.setVisibility(View.GONE);
+            if(mSwipeRefreshLayout.isRefreshing()){
+                mSwipeRefreshLayout.setRefreshing(false);
+            }
             Toast.makeText(MainActivity.this, R.string.error_no_service, Toast.LENGTH_SHORT)
                 .show();
         }
@@ -358,6 +373,8 @@ public class MainActivity extends AppCompatActivity implements GoogleApiClient.C
     }
 
     private void showData(ForecastResponseModel model) {
+        mProgressHourly.setVisibility(View.GONE);
+        mProgressDaily.setVisibility(View.GONE);
         mTextPromptHourly.setText(R.string.title_hourly_forecast);
         mTextPromptDaily.setText(R.string.title_daily_forecast);
         if (model.getCurrently() != null) {
@@ -492,8 +509,6 @@ public class MainActivity extends AppCompatActivity implements GoogleApiClient.C
                     .celsiusToFahrenheit((int) data.getApparentTemperature()) + temperatureUnit;
                 break;
         }
-//        String celsius = getResources().getString(R.string.symbol_celsius);
-//        String temperature = String.valueOf((int) data.getTemperature());
         String updateTime;
         if (mUnixTime == 0) {
             updateTime =
@@ -576,5 +591,24 @@ public class MainActivity extends AppCompatActivity implements GoogleApiClient.C
                 }
             }
         });
+    }
+    public boolean isNetworkAvailable() {
+        boolean status = false;
+        try {
+            ConnectivityManager cm =
+                (ConnectivityManager) getSystemService(Context.CONNECTIVITY_SERVICE);
+            NetworkInfo netInfo = cm.getActiveNetworkInfo();
+            if (netInfo != null && netInfo.getState() == NetworkInfo.State.CONNECTED) {
+                status = true;
+            } else {
+                netInfo = cm.getActiveNetworkInfo();
+                if (netInfo != null && netInfo.getState() == NetworkInfo.State.CONNECTED)
+                    status = true;
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+            return false;
+        }
+        return status;
     }
 }

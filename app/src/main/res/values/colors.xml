@@ -3,9 +3,10 @@
     <color name="colorPrimary">#3F51B5</color>
     <color name="colorPrimaryDark">#303F9F</color>
     <color name="colorAccent">#FF4081</color>
-    <color name="toolbarBackground">#021f3e</color>
-    <color name="transparentItem">#820a343e</color>
+    <color name="color_blue_grey_900">#021f3e</color>
+    <color name="color_transparent_blue_grey_900">#820a343e</color>
     <color name="colorWhite">#ffffff</color>
-    <color name="fabBackground">#35d437</color>
-    <color name="transparentBackground">#7f495a71</color>
+    <color name="color_blue_400">#35aad4</color>
+    <color name="color_transparent_blue_grey_700">#7f495a71</color>
+    <color name="color_cyan_300">#56bed1</color>
 </resources>
