@@ -1,11 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
 <android.support.v7.widget.CardView
     xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="@dimen/dp_60"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_margin="@dimen/dp_5"
-    app:cardBackgroundColor="@color/transparentItem"
+    app:cardBackgroundColor="@color/color_transparent_blue_grey_900"
     app:cardCornerRadius="@dimen/dp_5">
 
     <LinearLayout
@@ -14,12 +14,12 @@
         android:orientation="horizontal">
 
         <TextView
-            android:paddingLeft="@dimen/dp_10"
             android:id="@+id/text_day"
             android:layout_width="0dp"
             android:layout_height="match_parent"
             android:layout_weight="2"
             android:gravity="center_vertical|left"
+            android:paddingLeft="@dimen/dp_10"
             android:textColor="@android:color/white"
             android:textSize="@dimen/sp_14"/>
 
@@ -35,17 +35,17 @@
             android:layout_height="match_parent"
             android:layout_weight="1"
             android:gravity="center"
-            android:textColor="@android:color/white"
+            android:textColor="@android:color/holo_orange_light"
             android:textSize="@dimen/sp_14"/>
 
         <TextView
-            android:gravity="center_vertical|right"
             android:id="@+id/text_daily_min"
             android:layout_width="0dp"
             android:layout_height="match_parent"
+            android:layout_marginRight="@dimen/dp_5"
             android:layout_weight="1"
-            android:textColor="@android:color/white"
-            android:textSize="@dimen/sp_14"
-            android:layout_marginRight="@dimen/dp_5"/>
+            android:gravity="center_vertical|right"
+            android:textColor="@android:color/holo_blue_light"
+            android:textSize="@dimen/sp_14"/>
     </LinearLayout>
 </android.support.v7.widget.CardView>
