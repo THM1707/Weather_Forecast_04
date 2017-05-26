@@ -1,17 +1,19 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout
+    android:layout_margin="@dimen/dp_5"
+    android:padding="@dimen/dp_5"
     xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:layout_marginBottom="@dimen/dp_20"
     android:layout_marginTop="@dimen/dp_10"
-    android:background="@color/transparentBackground"
+    android:background="@drawable/background_data"
     android:orientation="vertical">
 
     <TextView
         android:layout_width="match_parent"
         android:layout_height="@dimen/dp_40"
-        android:background="@color/transparentItem"
+        android:background="@drawable/background_title"
         android:gravity="center_vertical"
         android:paddingLeft="@dimen/dp_10"
         android:text="@string/title_sun_moon"
@@ -86,7 +88,7 @@
     <TextView
         android:layout_width="match_parent"
         android:layout_height="@dimen/dp_40"
-        android:background="@color/transparentItem"
+        android:background="@drawable/background_title"
         android:gravity="center_vertical"
         android:paddingLeft="@dimen/dp_10"
         android:text="@string/title_details"
@@ -223,7 +225,7 @@
     <TextView
         android:layout_width="match_parent"
         android:layout_height="@dimen/dp_40"
-        android:background="@color/transparentItem"
+        android:background="@drawable/background_title"
         android:gravity="center_vertical"
         android:paddingLeft="@dimen/dp_10"
         android:text="@string/title_wind"

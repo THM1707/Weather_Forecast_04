@@ -35,7 +35,7 @@
             android:layout_height="match_parent"
             android:layout_weight="1"
             android:gravity="center"
-            android:textColor="@android:color/white"
+            android:textColor="@android:color/holo_orange_light"
             android:textSize="@dimen/sp_14"/>
 
         <TextView
@@ -44,7 +44,7 @@
             android:layout_width="0dp"
             android:layout_height="match_parent"
             android:layout_weight="1"
-            android:textColor="@android:color/white"
+            android:textColor="@android:color/holo_blue_light"
             android:textSize="@dimen/sp_14"
             android:layout_marginRight="@dimen/dp_5"/>
     </LinearLayout>

@@ -5,11 +5,19 @@
     <item
         android:id="@+id/item_place_picker"
         android:icon="@drawable/ic_place_picker"
-        android:title="@string/action_setting"
-        app:showAsAction="ifRoom"/>
+        android:title="@string/action_picker"
+        app:showAsAction="always"/>
+
     <item
         android:id="@+id/item_setting"
         android:icon="@drawable/ic_settings"
         android:title="@string/action_setting"
-        app:showAsAction="ifRoom"/>
+        app:showAsAction="always"/>
+    <item
+        
+        android:id="@+id/item_delete"
+        android:icon="@drawable/ic_delete"
+        android:title="@string/title_delete"
+        app:showAsAction="always"
+        />
 </menu>

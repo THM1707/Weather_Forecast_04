@@ -17,5 +17,8 @@
     <style name="BackButtonTheme" parent="AppTheme">
         <item name="android:homeAsUpIndicator">@drawable/ic_back_button</item>
     </style>
+    <style name="SplashTheme" parent="Base.Theme.AppCompat.Light.DarkActionBar">
+        <item name="android:windowBackground">@drawable/background_splash</item>
+    </style>
 
 </resources>

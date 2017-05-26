@@ -87,7 +87,7 @@ public class DailyAdapter extends RecyclerView.Adapter<DailyAdapter.ViewHolder> 
                     case UNIT_FAHRENHEIT:
                         minTemperature = String.valueOf((int) UnitUtils.celsiusToFahrenheit(item
                             .getTemperatureMin())) + fahrenheit;
-                        minTemperature = String.valueOf((int) UnitUtils.celsiusToFahrenheit(item
+                        maxTemperature = String.valueOf((int) UnitUtils.celsiusToFahrenheit(item
                             .getTemperatureMax())) + fahrenheit;
                         break;
                 }
