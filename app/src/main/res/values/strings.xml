@@ -51,4 +51,8 @@
     <string name="speed_mph">Mph</string>
     <string name="title_splash">Not So Cloudy</string>
     <string name="msg_turn_on_internet">Please turn on internet and try again</string>
+    <string name="action_picker">Place Picker</string>
+    <string name="title_delete">Delete</string>
+    <string name="msg_cant_delete">Can not delete this place</string>
+    <string name="msg_no_information">No information</string>
 </resources>

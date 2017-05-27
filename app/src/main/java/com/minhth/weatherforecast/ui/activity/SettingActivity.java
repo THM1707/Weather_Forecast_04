@@ -23,15 +23,17 @@ public class SettingActivity extends AppCompatActivity implements View.OnClickLi
     private static final int TEMPERATURE_FAHRENHEIT = 1;
     private static final String KEY_TEMPERATURE = "KEY_TEMPERATURE";
     private static final String KEY_MEASURE = "KEY_MEASURE";
-
+    private static final String PREFERENCE_NAME = "SETTING";
+    public static final String ACTION_SETTING = "com.minhth.weatherforecast.ACTION_SETTING";
     private int mTemperatureChoice, mMeasureChoice;
     private TextView mTextTemp, mTextMeasure;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_setting);
         setSupportActionBar((Toolbar) findViewById(R.id.toolbar_setting));
-        if(getSupportActionBar()!= null){
+        if (getSupportActionBar() != null) {
             getSupportActionBar().setDisplayHomeAsUpEnabled(true);
             getSupportActionBar().setDisplayShowHomeEnabled(true);
             getSupportActionBar().setTitle(getResources().getString(R.string.title_settings));
@@ -40,17 +42,18 @@ public class SettingActivity extends AppCompatActivity implements View.OnClickLi
         mTextMeasure = (TextView) findViewById(R.id.text_measure_choice);
         findViewById(R.id.linear_temp).setOnClickListener(this);
         findViewById(R.id.linear_measure).setOnClickListener(this);
-        SharedPreferences sharedPreferences = getPreferences(Context.MODE_PRIVATE);
+        SharedPreferences sharedPreferences = getSharedPreferences(PREFERENCE_NAME, Context
+            .MODE_PRIVATE);
         mTemperatureChoice = sharedPreferences.getInt(KEY_TEMPERATURE, TEMPERATURE_CELSIUS);
         mMeasureChoice = sharedPreferences.getInt(KEY_MEASURE, MEASURE_KM);
-        switch (mTemperatureChoice){
+        switch (mTemperatureChoice) {
             case TEMPERATURE_CELSIUS:
                 mTextTemp.setText(getResources().getString(R.string.symbol_celsius));
                 break;
             case TEMPERATURE_FAHRENHEIT:
                 mTextTemp.setText(getResources().getString(R.string.symbol_fahrenheit));
         }
-        switch (mMeasureChoice){
+        switch (mMeasureChoice) {
             case MEASURE_KM:
                 mTextMeasure.setText(getResources().getString(R.string.measure_kph_km));
                 break;
@@ -62,7 +65,7 @@ public class SettingActivity extends AppCompatActivity implements View.OnClickLi
 
     @Override
     public void onClick(View v) {
-        switch (v.getId()){
+        switch (v.getId()) {
             case R.id.linear_measure:
                 PopupMenu measurePopup = new PopupMenu(SettingActivity.this, mTextMeasure);
                 getMenuInflater().inflate(R.menu.menu_measure, measurePopup.getMenu());
@@ -82,7 +85,7 @@ public class SettingActivity extends AppCompatActivity implements View.OnClickLi
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
-        switch (item.getItemId()){
+        switch (item.getItemId()) {
             case android.R.id.home:
                 onBackPressed();
                 return true;
@@ -92,8 +95,9 @@ public class SettingActivity extends AppCompatActivity implements View.OnClickLi
 
     @Override
     public boolean onMenuItemClick(MenuItem item) {
-        SharedPreferences.Editor editor = getPreferences(MODE_PRIVATE).edit();
-        switch (item.getItemId()){
+        SharedPreferences.Editor editor =
+            getSharedPreferences(PREFERENCE_NAME, MODE_PRIVATE).edit();
+        switch (item.getItemId()) {
             case R.id.menu_kph:
                 mTextMeasure.setText(getResources().getString(R.string.measure_kph_km));
                 mMeasureChoice = MEASURE_KM;
@@ -118,7 +122,6 @@ public class SettingActivity extends AppCompatActivity implements View.OnClickLi
                 editor.putInt(KEY_TEMPERATURE, TEMPERATURE_FAHRENHEIT);
                 editor.apply();
                 break;
-
         }
         return true;
     }
@@ -131,5 +134,4 @@ public class SettingActivity extends AppCompatActivity implements View.OnClickLi
         setResult(RESULT_OK, returnIntent);
         super.onBackPressed();
     }
-
 }
