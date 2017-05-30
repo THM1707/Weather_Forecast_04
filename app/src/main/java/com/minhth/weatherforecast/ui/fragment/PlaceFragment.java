@@ -221,6 +221,7 @@ public class PlaceFragment extends Fragment implements View.OnClickListener,
     }
 
     public void getLocation() {
+        mGpsService.getUserLocation();
         if (mGpsService.isCanGetLocation()) {
             mLatitude = mGpsService.getLatitude();
             mLongitude = mGpsService.getLongitude();

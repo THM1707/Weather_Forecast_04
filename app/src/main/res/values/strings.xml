@@ -55,4 +55,6 @@
     <string name="title_delete">Delete</string>
     <string name="msg_cant_delete">Can not delete this place</string>
     <string name="msg_no_information">No information</string>
+    <string name="msg_delete_after">This place will be deleted after refresh app</string>
+    <string name="msg_turn_on_location">Please turn on location and try again</string>
 </resources>

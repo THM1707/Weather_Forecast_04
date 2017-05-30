@@ -9,10 +9,13 @@ import com.minhth.weatherforecast.data.local.PlaceContract;
  */
 public class PlaceModel {
     private int mId;
-    private String mName;
     private double mLatitude, mLongitude;
 
-
+    public PlaceModel(int id, double latitude, double longitude) {
+        mId = id;
+        mLatitude = latitude;
+        mLongitude = longitude;
+    }
 
     public PlaceModel(double latitude, double longitude) {
         mLatitude = latitude;
@@ -33,14 +36,6 @@ public class PlaceModel {
 
     public void setId(int id) {
         mId = id;
-    }
-
-    public String getName() {
-        return mName;
-    }
-
-    public void setName(String name) {
-        mName = name;
     }
 
     public double getLatitude() {

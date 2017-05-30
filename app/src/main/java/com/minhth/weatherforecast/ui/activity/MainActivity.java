@@ -93,6 +93,10 @@ public class MainActivity extends AppCompatActivity implements GoogleApiClient.C
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         if (resultCode != RESULT_OK) {
+            if(requestCode == REQUEST_CHECK_SETTINGS){
+                Toast.makeText(this, R.string.msg_turn_on_location, Toast.LENGTH_SHORT).show();
+                finish();
+            }
             return;
         }
         switch (requestCode) {
@@ -103,9 +107,9 @@ public class MainActivity extends AppCompatActivity implements GoogleApiClient.C
                 Place place = PlacePicker.getPlace(this, data);
                 double latitude = place.getLatLng().latitude;
                 double longitude = place.getLatLng().longitude;
-                mPlaces.add(new PlaceModel(latitude, longitude));
                 PlaceDataSource db = new PlaceDataSource(MainActivity.this);
-                db.insertPlace(new PlaceModel(latitude, longitude));
+                int i = (int) db.insertPlace(new PlaceModel(latitude, longitude));
+                mPlaces.add(new PlaceModel(i, latitude, longitude));
                 mFragments.add(PlaceFragment.newInstance(latitude, longitude, mFragments.size()));
                 mPagerAdapter.notifyDataSetChanged();
                 mViewPager.setCurrentItem(mFragments.size());
@@ -129,6 +133,7 @@ public class MainActivity extends AppCompatActivity implements GoogleApiClient.C
                     Toast.makeText(MainActivity.this, R.string.msg_no_permission, Toast
                         .LENGTH_SHORT)
                         .show();
+                    setPager();
                 } else {
                     setPager();
                 }
@@ -212,11 +217,10 @@ public class MainActivity extends AppCompatActivity implements GoogleApiClient.C
         if (position == 0) {
             Toast.makeText(this, R.string.msg_cant_delete, Toast.LENGTH_SHORT).show();
         } else {
-            mFragments.remove(position);
             PlaceDataSource db = new PlaceDataSource(this);
             db.deletePlace(mPlaces.get(position - 1).getId());
-            mPagerAdapter = new PagerAdapter(getSupportFragmentManager(), mFragments);
-            mViewPager.setAdapter(mPagerAdapter);
+            Toast.makeText(this, R.string.msg_delete_after, Toast.LENGTH_SHORT)
+                .show();
         }
     }
 
